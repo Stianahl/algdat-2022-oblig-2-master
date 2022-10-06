@@ -6,6 +6,7 @@ package no.oslomet.cs.algdat.Oblig2;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 
 
 public class DobbeltLenketListe<T> implements Liste<T> {
@@ -43,7 +44,26 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     }
 
     public DobbeltLenketListe(T[] a) {
+        this();
 
+        Objects.requireNonNull(a, "Tabellen a er null!");
+
+        int i = 0;
+
+        for(; i < a.length && a[i] == null; i++);
+
+        if(i < a.length){
+            Node<T> p = hode = new Node<>(a[i],null, null);
+            antall = 1;
+
+            for(i++; i < a.length; i++){
+                if(a[i] != null){
+                    p = p.neste = new Node<>(a[i], p.forrige, null);
+                    antall++;
+                }
+            }
+            hale = p;
+        }
     }
 
     public Liste<T> subliste(int fra, int til) {
