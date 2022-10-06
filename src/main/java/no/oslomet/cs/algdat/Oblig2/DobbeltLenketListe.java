@@ -58,7 +58,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
             for(i++; i < a.length; i++){
                 if(a[i] != null){
-                    p = p.neste = new Node<>(a[i], p.forrige, null);
+                    p = p.neste = new Node<>(a[i], p, null);
                     antall++;
                 }
             }
@@ -87,7 +87,18 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public boolean leggInn(T verdi) {
-        throw new UnsupportedOperationException();
+        Objects.requireNonNull(verdi, "Ikke tillatt med null-verdier!");
+
+        if(tom()){
+            hode = hale = new Node<>(verdi, null, null);
+        }
+        else{
+            hale = hale.neste = new Node<>(verdi, hale, null);
+        }
+        antall++;
+        endringer++;
+
+        return true;
     }
 
     @Override
