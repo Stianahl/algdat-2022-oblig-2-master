@@ -56,6 +56,17 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         return p;
     }
 
+    private static void fratilKontroll(int antall, int fra, int til){
+        if(fra < 0){
+            throw new IndexOutOfBoundsException("fra(" + fra + ") er negativ!");
+        }
+        if(til > antall){
+            throw new IndexOutOfBoundsException("til(" + til + ") > antall(" + antall + ")");
+        }
+        if(fra > til){
+            throw new IllegalArgumentException("fra(" + fra + ") > til(" + til + ") - illegalt intervall!");
+        }
+    }
 
     public DobbeltLenketListe() {
         hode = hale = null;
@@ -87,7 +98,8 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     }
 
     public Liste<T> subliste(int fra, int til) {
-        throw new UnsupportedOperationException();
+        fratilKontroll(antall, fra, til);
+        return new DobbeltLenketListe<>();
     }
 
     @Override
