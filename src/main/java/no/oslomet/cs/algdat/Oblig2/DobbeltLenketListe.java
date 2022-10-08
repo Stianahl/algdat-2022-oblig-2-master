@@ -138,21 +138,24 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         Objects.requireNonNull(verdi, "Ikke tillatt med null-verdier!");
         indeksKontroll(indeks, true);
 
-        if(indeks == 0){
-            hode = new Node<>(verdi, null, hode);
-            if(tom()){
-                hale = hode;
-            }
+        if(tom() && indeks == 0){
+            hode = hale = new Node<>(verdi, null, null);
+        }
+        else if(indeks == 0){
+            hode = new Node<T>(verdi, null, hode);
+            hode.neste.forrige = hode;
         }
         else if(indeks == antall){
             hale = hale.neste = new Node<>(verdi, hale, null);
+            hale.forrige.neste = hale;
         }
         else{
             Node<T> p = hode;
-            for(int i = 1; i < indeks; i++){
+            for(int i = 0; i < indeks; i++){
                 p = p.neste;
             }
-            p.neste = new Node<>(verdi, p, p.neste);
+            p = new Node<>(verdi, p.forrige, p);
+            p.neste.forrige = p.forrige.neste = p;
         }
         antall++;
         endringer++;
