@@ -99,7 +99,21 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     public Liste<T> subliste(int fra, int til) {
         fratilKontroll(antall, fra, til);
-        return new DobbeltLenketListe<>();
+
+        Node<T> f = finnNode(fra);
+        DobbeltLenketListe<T> subliste = new DobbeltLenketListe<>();
+
+        if(antall < 1){
+            return subliste;
+        }
+
+        for (; fra < til; fra++){
+            subliste.leggInn(f.verdi);
+            f = f.neste;
+
+        }
+
+        return subliste;
     }
 
     @Override
@@ -207,33 +221,41 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         if(verdi == null){
             return false;
         }
-        Node<T> q = hode;
-        Node<T> p = null;
 
-        while(q != null){
-            if(q.verdi.equals(verdi)){
+        Node<T> p = hode;
+
+        while(p != null){
+            if(p.verdi.equals(verdi)){
                 break;
             }
-            p = q;
-            q = q.neste;
+            p = p.neste;
         }
 
-        if(q == null){
+        if(p == null){
             return false;
         }
-        else if(q == hode){
+
+        if(p == hode){
             hode = hode.neste;
+
+            if(hode != null){
+                hode.forrige = null;
+            }
+            else{
+                hale = null;
+            }
+        }
+        else if(p == hale){
+            hale = hale.forrige;
+            hale.neste = null;
         }
         else{
-            p.neste = q.neste;
+            p.forrige.neste = p.neste;
+            p.neste.forrige = p.forrige;
         }
 
-        if(q == hale){
-            hale = p;
-        }
-
-        q.verdi = null;
-        q.neste = null;
+        p.verdi = null;
+        p.forrige = p.neste = null;
 
         antall--;
         endringer++;
@@ -243,29 +265,30 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     @Override
     public T fjern(int indeks) {
         indeksKontroll(indeks, false);
-
-        T temp;
+        Node<T> temp;
 
         if(indeks == 0){
-            temp = hode.verdi;
+            temp = hode;
             hode = hode.neste;
-            if(antall == 1){
-                hale = null;
-            }
+            hode.forrige = null;
+        }
+        else if(indeks == antall - 1){
+            temp = hale;
+            hale = hale.forrige;
+            hale.neste = null;
         }
         else{
             Node<T> p = finnNode(indeks - 1);
-            Node<T> q = p.neste;
-            temp = q.verdi;
 
-            if(q == hale){
-                hale = p;
-            }
-            p.neste = q.neste;
+            temp = p.neste;
+
+            p.neste = p.neste.neste;
+            p.neste.forrige = p;
         }
+
         antall--;
         endringer++;
-        return temp;
+        return temp.verdi;
     }
 
     @Override
