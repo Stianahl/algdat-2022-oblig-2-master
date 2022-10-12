@@ -121,12 +121,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public boolean tom() {
-        if(antall == 0){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return antall == 0;
     }
 
     @Override
@@ -154,7 +149,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
             hode = hale = new Node<>(verdi, null, null);
         }
         else if(indeks == 0){
-            hode = new Node<T>(verdi, null, hode);
+            hode = new Node<>(verdi, null, hode);
             hode.neste.forrige = hode;
         }
         else if(indeks == antall){
